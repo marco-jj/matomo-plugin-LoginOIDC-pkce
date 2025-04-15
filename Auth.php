@@ -6,7 +6,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  *
  */
-namespace Piwik\Plugins\LoginOIDC;
+namespace Piwik\Plugins\PkceOIDC;
 
 use Piwik\AuthResult;
 use Piwik\Plugins\UsersManager\Model;

@@ -1,27 +1,24 @@
 {
-    "name": "LoginOIDC",
+    "name": "PkceOIDC",
     "version": "5.0.0",
-    "description": "Adds support for integrating external authentication services",
-    "keywords": ["authentication", "login", "oauth", "openid", "connect", "sso"],
+    "description": "Adds support for OIDC login that uses pkce flow.",
+    "keywords": ["authentication", "login", "oauth", "openid", "connect", "sso", "pkce"],
     "license": "GPL v3+",
-    "homepage": "https://github.com/dominik-th/matomo-plugin-LoginOIDC",
+    "homepage": "https://github.com/marco-jj/matomo-plugin-LoginOIDC-pkce",
     "authors": [
         {
-            "name": "Dominik Thiemermann",
-            "email": "hello@dthiemermann.org",
-            "homepage": "https://www.dthiemermann.org"
+            "name": "Innovaway S.p.A.",
+            "email": "marco.amedura@innovaway.it",
+            "homepage": "https:\/\/innovaway.it"
         }
     ],
     "require": {
         "piwik": ">=5.0.0-b1,<6.0.0-b1",
         "php": ">=7.0.0"
     },
-    "donate": {
-        "paypal": "matomo-loginoidc@dthiemermann.org"
-    },
     "support": {
-        "email": "matomo-loginoidc@dthiemermann.org",
-        "issues": "https://github.com/dominik-th/matomo-plugin-LoginOIDC/issues",
-        "source": "https://github.com/dominik-th/matomo-plugin-LoginOIDC"
+        "email": "marco.amedura@innovaway.it",
+        "issues": "https://github.com/marco-jj/matomo-plugin-LoginOIDC-pkce/issues",
+        "source": "https://github.com/marco-jj/matomo-plugin-LoginOIDC-pkce"
     }
 }

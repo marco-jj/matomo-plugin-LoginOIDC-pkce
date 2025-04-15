@@ -7,7 +7,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-namespace Piwik\Plugins\LoginOIDC;
+namespace Piwik\Plugins\PkceOIDC;
 
 use Exception;
 use Piwik\Common;
@@ -15,12 +15,12 @@ use Piwik\Config;
 use Piwik\Db;
 use Piwik\DbHelper;
 use Piwik\FrontController;
-use Piwik\Plugins\LoginOIDC\SystemSettings;
-use Piwik\Plugins\LoginOIDC\Url;
+use Piwik\Plugins\PkceOIDC\SystemSettings;
+use Piwik\Plugins\PkceOIDC\Url;
 use Piwik\Request;
 use Piwik\Session;
 
-class LoginOIDC extends \Piwik\Plugin
+class PkceOIDC extends \Piwik\Plugin
 {
     /**
      * Subscribe to Matomo events and assign handlers.
@@ -65,7 +65,7 @@ class LoginOIDC extends \Piwik\Plugin
     {
         $module = Request::fromGet()->getStringParameter("module", "");
         $action = Request::fromGet()->getStringParameter("action", "");
-        return ($module == "LoginOIDC") && ($action == "callback");
+        return ($module == "PkceOIDC") && ($action == "callback");
     }
 
     /**
@@ -76,7 +76,7 @@ class LoginOIDC extends \Piwik\Plugin
      */
     public function getStylesheetFiles(array &$files)
     {
-        $files[] = "plugins/LoginOIDC/stylesheets/loginMod.css";
+        $files[] = "plugins/PkceOIDC/stylesheets/loginMod.css";
     }
 
     /**
@@ -97,7 +97,7 @@ class LoginOIDC extends \Piwik\Plugin
      */
     public function renderLoginOIDCUserSettings(string &$out)
     {
-        $content = FrontController::getInstance()->dispatch("LoginOIDC", "userSettings");
+        $content = FrontController::getInstance()->dispatch("PkceOIDC", "userSettings");
         if (!empty($content)) {
             $out .= $content;
         }
@@ -113,7 +113,7 @@ class LoginOIDC extends \Piwik\Plugin
     public function renderLoginOIDCMod(string &$out, string $payload = null)
     {
         if (!empty($payload) && $payload === "bottom") {
-            $content = FrontController::getInstance()->dispatch("LoginOIDC", "loginMod");
+            $content = FrontController::getInstance()->dispatch("PkceOIDC", "loginMod");
             if (!empty($content)) {
                 $out .= $content;
             }
@@ -132,7 +132,7 @@ class LoginOIDC extends \Piwik\Plugin
     public function renderConfirmPasswordMod(string &$out, string $payload = null)
     {
         if (!empty($payload) && $payload === "bottom") {
-            $content = FrontController::getInstance()->dispatch("LoginOIDC", "confirmPasswordMod");
+            $content = FrontController::getInstance()->dispatch("PkceOIDC", "confirmPasswordMod");
             if (!empty($content)) {
                 $out .= $content;
             }
@@ -164,7 +164,7 @@ class LoginOIDC extends \Piwik\Plugin
     }
 
     /**
-     * Disable password confirmation when user signed up with LoginOIDC.
+     * Disable password confirmation when user signed up with PkceOIDC.
      * This feature requires Matomo >4.12.0
      *
      * @return void

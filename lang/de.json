@@ -1,5 +1,5 @@
 {
-    "LoginOIDC": {
+    "PkceOIDC": {
         "SettingDisableSuperuser": "Deaktiviere externen Login-Service für Superuser",
         "SettingDisableSuperuserHelp": "",
         "SettingDisablePasswordConfirmation": "Deaktiviere Passwortbestätigung",

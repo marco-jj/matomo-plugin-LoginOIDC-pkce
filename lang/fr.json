@@ -1,5 +1,5 @@
 {
-    "LoginOIDC": {
+    "PkceOIDC": {
         "SettingDisableSuperuser": "Désactiver la connexion externe des Super Utilisateurs",
         "SettingDisableSuperuserHelp": "",
         "SettingDisableDirectLoginUrl": "Désactiver l'url de connexion directe",

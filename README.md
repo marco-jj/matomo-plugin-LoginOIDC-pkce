@@ -1,5 +1,5 @@
 ![CI Pipeline](https://github.com/dominik-th/matomo-plugin-LoginOIDC/actions/workflows/ci-pipeline.yml/badge.svg)
-# Matomo LoginOIDC Plugin
+# Matomo PkceOIDC Plugin
 
 ## Description
 
@@ -11,7 +11,7 @@ Easily add a "Login with GitHub" button your Matomo instance. You can also setup
 
 Install it via Matomo Marketplace.
 
-Alternatively put the files from this repo in <MATOMO_INSTALLATION>/plugins/LoginOIDC and activate it in the settings.
+Alternatively put the files from this repo in <MATOMO_INSTALLATION>/plugins/PkceOIDC and activate it in the settings.
 
 ## License
 
