@@ -222,7 +222,7 @@ class Controller extends \Piwik\Plugin\Controller
             "client_id" => $settings->clientId->getValue(),
             "client_secret" => $settings->clientSecret->getValue(),
             "code" => Request::fromGet()->getStringParameter("code"),
-            "redirect_uri" => $this->getRedirectUri(),
+            "redirect_uri" => Url::getCurrentUrlWithoutQueryString(),
             "grant_type" => "authorization_code",
             "state" => Request::fromGet()->getStringParameter("state")
         );
