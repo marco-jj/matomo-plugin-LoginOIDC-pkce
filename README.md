@@ -1,4 +1,4 @@
-![CI Pipeline](https://github.com/marko-jj/matomo-plugin-LoginOIDC-pkce/actions/workflows/ci-pipeline.yml/badge.svg)
+![CI Pipeline](https://github.com/marco-jj/matomo-plugin-LoginOIDC-pkce/actions/workflows/ci-pipeline.yml/badge.svg)
 # Matomo PkceOIDC Plugin
 
 ## Description
