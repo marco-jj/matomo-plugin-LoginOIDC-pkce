@@ -21,6 +21,13 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 {
 
     /**
+     * Whether to auto-submit the login form.
+     *
+     * @var bool
+     */
+    public $autoSubmitLoginForm;
+
+    /**
      * The disable superuser setting.
      *
      * @var bool
@@ -97,6 +104,8 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
      */
     public $endSessionUrl;
 
+    public $postLogoutRedirectUri;
+
     /**
      * The name of the unique user id field in $userinfoUrl response.
      *
@@ -152,11 +161,13 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
         $this->allowSignup = $this->createAllowSignupSetting();
         $this->bypassTwoFa = $this->createBypassTwoFaSetting();
         $this->autoLinking = $this->createAutoLinkingSetting();
+        $this->autoSubmitLoginForm = $this->createAutoSubmitLoginFormSetting();
         $this->authenticationName = $this->createAuthenticationNameSetting();
         $this->authorizeUrl = $this->createAuthorizeUrlSetting();
         $this->tokenUrl = $this->createTokenUrlSetting();
         $this->userinfoUrl = $this->createUserinfoUrlSetting();
         $this->endSessionUrl = $this->createEndSessionUrlSetting();
+        $this->postLogoutRedirectUri = $this->createPostLogoutRedirectUriSetting();
         $this->userinfoId = $this->createUserinfoIdSetting();
         $this->clientId = $this->createClientIdSetting();
         $this->clientSecret = $this->createClientSecretSetting();
@@ -323,6 +334,21 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
     }
 
     /**
+     * Add post logout redirect URI setting.
+     *
+     * @return SystemSetting
+     */
+    private function createPostLogoutRedirectUriSetting(): SystemSetting
+    {
+        return $this->makeSetting("postLogoutRedirectUri", $default = "", FieldConfig::TYPE_STRING, function(FieldConfig $field) {
+            $field->title = Piwik::translate("PkceOIDC_SettingPostLogoutRedirectUri");
+            $field->description = Piwik::translate("PkceOIDC_SettingPostLogoutRedirectUriHelp");
+            $field->uiControl = FieldConfig::UI_CONTROL_URL;
+            $field->validators[] = new UrlLike();
+        });
+    }
+
+    /**
      * Add userinfo id setting.
      *
      * @return SystemSetting
@@ -417,6 +443,19 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
                     }
                 }
             };
+        });
+    }
+    /**
+     * Add auto submit login form setting.
+     *
+     * @return SystemSetting
+     */
+    private function createAutoSubmitLoginFormSetting() : SystemSetting
+    {
+        return $this->makeSetting("autoSubmitLoginForm", $default = false, FieldConfig::TYPE_BOOL, function(FieldConfig $field) {
+            $field->title = Piwik::translate("PkceOIDC_SettingAutoSubmitLoginForm");
+            $field->description = Piwik::translate("PkceOIDC_SettingAutoSubmitLoginFormHelp");
+            $field->uiControl = FieldConfig::UI_CONTROL_CHECKBOX;
         });
     }
 }

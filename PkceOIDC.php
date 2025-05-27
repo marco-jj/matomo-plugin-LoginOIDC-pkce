@@ -148,6 +148,7 @@ class PkceOIDC extends \Piwik\Plugin
     {
         $settings = new SystemSettings();
         $endSessionUrl = $settings->endSessionUrl->getValue();
+        $postLogoutRedirect = $settings->postLogoutRedirectUri->getValue();
         if (!empty($endSessionUrl) && $_SESSION["loginoidc_auth"]) {
             // make sure we properly unset the plugins session variable
             unset($_SESSION['loginoidc_auth']);
@@ -155,9 +156,8 @@ class PkceOIDC extends \Piwik\Plugin
             if (isset($_SESSION["loginoidc_idtoken"])) {
                 $endSessionUrl->setQueryParameter("id_token_hint", $_SESSION["loginoidc_idtoken"]);
             }
-            $originalLogoutUrl = Config::getInstance()->General['login_logout_url'];
-            if ($originalLogoutUrl) {
-                $endSessionUrl->setQueryParameter("post_logout_redirect_uri", $originalLogoutUrl);
+            if ($postLogoutRedirect) {
+                $endSessionUrl->setQueryParameter("post_logout_redirect_uri", $postLogoutRedirect);
             }
             Config::getInstance()->General['login_logout_url'] = $endSessionUrl->buildString();
         }

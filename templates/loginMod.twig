@@ -10,3 +10,11 @@
         </button>
     </form>
 </div>
+
+{% if settings is defined and settings.autoSubmitLoginForm is defined and settings.autoSubmitLoginForm.value %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('.loginoidc-auth-button').closest('form').submit();
+    });
+</script>
+{% endif %}

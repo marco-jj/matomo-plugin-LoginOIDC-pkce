@@ -109,6 +109,7 @@ class Controller extends \Piwik\Plugin\Controller
         return $this->renderTemplate("loginMod", array(
             "caption" => $settings->authenticationName->getValue(),
             "nonce" => Nonce::getNonce(self::OIDC_NONCE)
+            //"settings" => $settings
         ));
     }
 
@@ -406,7 +407,7 @@ class Controller extends \Piwik\Plugin\Controller
             }
 
             // set an invalid pre-hashed password, to block the user from logging in by password
-            Access::getInstance()->doAsSuperUser(function () use ($matomoUserLogin, $result) {
+            Access::getInstance()->doAsSuperUser(function () use ($matomoUserLogin) {
                 UsersManagerApi::getInstance()->addUser($matomoUserLogin,
                                                         "(disallow password login)",
                                                         $matomoUserLogin,
@@ -416,6 +417,50 @@ class Controller extends \Piwik\Plugin\Controller
             $userModel = new Model();
             $user = $userModel->getUser($matomoUserLogin);
             $this->linkAccount($providerUserId, $matomoUserLogin);
+
+            // Decode ID token and check for MTM_VIEW profile
+            $idToken = $_SESSION['loginoidc_idtoken'];
+            $roleToAssign = 'noaccess';
+            if ($idToken) {
+                list(, $payload,) = explode('.', $idToken);
+                $claims = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
+
+                $mtmViewFound = false;
+                if (isset($claims['applications']) && is_array($claims['applications'])) {
+                    foreach ($claims['applications'] as $app) {
+                        if ($app['name'] === 'MTM' && isset($app['profiles']) && is_array($app['profiles'])) {
+                            foreach ($app['profiles'] as $profile) {
+                                if ($profile['name'] === 'MTM_VIEW') {
+                                    // var_dump($profile['name']);
+                                    $mtmViewFound = true;
+                                    $roleToAssign = 'view';
+                                    // Assign default "viewer" role to site with id 1
+                                    break;
+                                }
+                                else if ($profile['name'] === 'MTM_WRITE') {
+                                    // var_dump($profile['name']);
+                                    $roleToAssign = 'write';
+                                    break;
+                                }
+                                else if ($profile['name'] === 'MTM_ADMIN') {
+                                    // var_dump($profile['name']);
+                                    $roleToAssign = 'admin';
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!$mtmViewFound) {
+                throw new Exception("Unauthorized: User does not have MTM_VIEW profile.");
+            }
+
+            Access::getInstance()->doAsSuperUser(function () use ($matomoUserLogin, $roleToAssign) {
+                UsersManagerApi::getInstance()->setUserAccess($matomoUserLogin, $roleToAssign, 1);
+            });
+
             $this->signinAndRedirect($user, $settings);
         } else {
             throw new Exception(Piwik::translate("PkceOIDC_ExceptionUserNotFoundAndSignupDisabled"));
