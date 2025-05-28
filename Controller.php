@@ -425,25 +425,27 @@ class Controller extends \Piwik\Plugin\Controller
                 list(, $payload,) = explode('.', $idToken);
                 $claims = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
 
-                $mtmViewFound = false;
+                $mtmFound = false;
                 if (isset($claims['applications']) && is_array($claims['applications'])) {
                     foreach ($claims['applications'] as $app) {
                         if ($app['name'] === 'MTM' && isset($app['profiles']) && is_array($app['profiles'])) {
                             foreach ($app['profiles'] as $profile) {
                                 if ($profile['name'] === 'MTM_VIEW') {
                                     // var_dump($profile['name']);
-                                    $mtmViewFound = true;
+                                    $mtmFound = true;
                                     $roleToAssign = 'view';
                                     // Assign default "viewer" role to site with id 1
                                     break;
                                 }
                                 else if ($profile['name'] === 'MTM_WRITE') {
                                     // var_dump($profile['name']);
+                                    $mtmFound = true;
                                     $roleToAssign = 'write';
                                     break;
                                 }
                                 else if ($profile['name'] === 'MTM_ADMIN') {
                                     // var_dump($profile['name']);
+                                    $mtmFound = true;
                                     $roleToAssign = 'admin';
                                     break;
                                 }
@@ -453,8 +455,8 @@ class Controller extends \Piwik\Plugin\Controller
                 }
             }
 
-            if (!$mtmViewFound) {
-                throw new Exception("Unauthorized: User does not have MTM_VIEW profile.");
+            if (!$mtmFound) {
+                throw new Exception("Unauthorized: User does not have MTM profile.");
             }
 
             Access::getInstance()->doAsSuperUser(function () use ($matomoUserLogin, $roleToAssign) {
