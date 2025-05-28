@@ -421,6 +421,7 @@ class Controller extends \Piwik\Plugin\Controller
             // Decode ID token and check for MTM_VIEW profile
             $idToken = $_SESSION['loginoidc_idtoken'];
             $roleToAssign = 'noaccess';
+            $isSuperUser = false;
             if ($idToken) {
                 list(, $payload,) = explode('.', $idToken);
                 $claims = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
@@ -447,6 +448,7 @@ class Controller extends \Piwik\Plugin\Controller
                                     // var_dump($profile['name']);
                                     $mtmFound = true;
                                     $roleToAssign = 'admin';
+                                    $isSuperUser = true;
                                     break;
                                 }
                             }
@@ -458,10 +460,15 @@ class Controller extends \Piwik\Plugin\Controller
             if (!$mtmFound) {
                 throw new Exception("Unauthorized: User does not have MTM profile.");
             }
-
+            if ($roleToAssign !== 'admin')
             Access::getInstance()->doAsSuperUser(function () use ($matomoUserLogin, $roleToAssign) {
                 UsersManagerApi::getInstance()->setUserAccess($matomoUserLogin, $roleToAssign, 1);
             });
+            else if ($isSuperUser) {
+                    Access::getInstance()->doAsSuperUser(function () use ($matomoUserLogin) {
+                        UsersManagerApi::getInstance()->setSuperUserAccess($matomoUserLogin, true);
+                    });
+                }
 
             $this->signinAndRedirect($user, $settings);
         } else {
