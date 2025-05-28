@@ -108,8 +108,8 @@ class Controller extends \Piwik\Plugin\Controller
         $settings = new \Piwik\Plugins\PkceOIDC\SystemSettings();
         return $this->renderTemplate("loginMod", array(
             "caption" => $settings->authenticationName->getValue(),
-            "nonce" => Nonce::getNonce(self::OIDC_NONCE)
-            //"settings" => $settings
+            "nonce" => Nonce::getNonce(self::OIDC_NONCE),
+            "settings" => $settings
         ));
     }
 
